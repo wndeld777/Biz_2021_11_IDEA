@@ -1,4 +1,2 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<section>
-  <h1>나는 홈</h1>
-</section>
+<h1>Republic of Korea</h1>
