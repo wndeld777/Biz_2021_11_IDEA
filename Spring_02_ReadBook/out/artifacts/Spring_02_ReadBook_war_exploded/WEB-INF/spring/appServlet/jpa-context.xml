@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/data/jpa https://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
     <!--
      jasypt 로 암호화된 username 과 password 를 db.properties 로 부터
@@ -29,10 +30,26 @@
         </property>
     </bean>
 
-    <bean class="org.apache.commons.dbcp2.BasicDataSource">
-        <property name="driver" value="${db.driver}"/>
+    <bean id="ds" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="${db.driver}"/>
         <property name="url" value="${db.url}"/>
         <property name="username" value="${db.username}"/>
         <property name="password" value="${db.password}"/>
     </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="ds"/>
+        <property name="packagesToScan" value="com.callor.readbook.model"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">create</prop>
+            </props>
+        </property>
+    </bean>
+
+    <jpa:repositories base-package="com.callor.readbook.persistence"/>
 </beans>
